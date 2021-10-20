@@ -10,12 +10,17 @@ FROM ubuntu:14.04
 
 # Create app directory
 #VOLUME ["/app"]
-RUN mkdir -p /app
+#RUN mkdir /var/app && chown -R root /var/app/
+RUN mkdir /app/
+RUN mkdir /app/output/
 
 # Define working directory
-WORKDIR /app
+WORKDIR /app/
 #VOLUME /app
-COPY ./ /app/
+COPY ./package.json /app/
+COPY ./Gruntfile.js /app/
+COPY ./blog.html ./app/
+COPY ./index.html /app/
 
 RUN apt-get update -y
 RUN apt-get upgrade -y
@@ -52,8 +57,8 @@ RUN     npm install
 #RUN npm install util -g
 RUN grunt -d
 
-RUN touch index.html
-RUN touch generated_blog.html
+RUN grep '<style>' generated_index.html
+#RUN mv generated_blog.html /app/output/
 
 # Bundle app source
 # Trouble with COPY http://stackoverflow.com/a/30405787/2926832
@@ -63,7 +68,8 @@ RUN touch generated_blog.html
 #RUN cd /src; npm install
 
 # Binds to port 8080
-EXPOSE  8008
+EXPOSE  9000
+#CMD ["run"]
 
 #  Defines your runtime(define default command)
 # These commands unlike RUN (they are carried out in the construction of the container) are run when the container

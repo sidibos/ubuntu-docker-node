@@ -2,7 +2,11 @@ version: "3.9"
 services:
   node:
     build: .
+      #context: ./
+      #dockerfile: Dockerfile-node
     ports:
-      - "8008:8008"
+      - 8000:9000
     volumes:
       - ./:/app
+    command: tail -f /dev/null
+    tty: true
